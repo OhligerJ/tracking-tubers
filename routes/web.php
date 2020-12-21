@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ChannelController;
 
 /*
 |--------------------------------------------------------------------------
@@ -12,7 +13,10 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
+Route::get('/all_channel_info/{url}', [ChannelController::class, 'allChannelInfo']);
+Route::get('/post_channel_url/{url}', [ChannelController::class, 'postNewChannel']);
 
-Route::get('/', function () {
-    return view('welcome');
+Route::get('/home', function () {
+    return 'hello';
 });
+
