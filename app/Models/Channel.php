@@ -24,7 +24,7 @@ class Channel extends Model
 
     public function getSubscriberInfo()
     {
-        $response = Http::get(url);
+        $response = Http::get($this->url);
 
         if($response->status() >= 200 && $response->status() < 300){
             // normally, scan DOM for value (id = subscriber-count, and then parse it since "3.18M subscribers" isn't an integer)
