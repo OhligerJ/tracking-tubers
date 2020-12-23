@@ -41,7 +41,7 @@ class ChannelController extends Controller
             }
             $info_array[] = [$val['date'], $sub_diff];           
         }
-
+        // I was really hoping to make collection mapping work for this, but I never managed
         // $info = $channel_info->map(function ($item, $key) {     
         //     $prev_sub_count = $channel_info[$key - 1]->subscriber_count;       
         //     $sub_diff = $item['subscriber_count'] - $prev_sub_count;
@@ -58,17 +58,27 @@ class ChannelController extends Controller
     }
 
     public function cleanUrl($url){
-        if (substr($url, 0, 4) == 'http'){
-            $url = $url;
-        } else {
-            if(strpos($url, 'user') === false){ 
-                //hinting at subscriber counts for users, not just channels. This logic would probably need to go deeper than this
-                $url = "https://www.youtube.com/channel/" .$url;
-            } else {
-                $url = "https://www.youtube.com/user/" .$url;
-            }
-        }
+        $url = "http://www.youtube.com/channel/" . $url; // We were doing this just for expediency of live testing. This would break the api if it posted a full URL, obviously
+        $components = parse_url($url);
 
+        // "/channel/UCDK9qD5DAQML-pzrtA7A4oA"
+        if (isset($components['path']) && $components !== false && $components['path'] !== '/'){
+            $url = "https://www.youtube.com". $components['path'];       
+         } else {
+            \Log::info($url . " was not a parseable URL");
+            
+            throw new \UnexpectedValueException('cleanUrl tried to parse an unparseable URL string');
+         }
+        // else {
+        //     if(strpos($url, 'user') === false){ 
+        //         //hinting at subscriber counts for users, not just channels. This logic is out of scope and would probably need to go deeper than this
+                
+        //         $url = "https://www.youtube.com/channel/" .$url;
+        //     } else {
+        //         $url = "https://www.youtube.com/user/" .$url;
+        //     }
+        // }
+        \Log::info($url);
         return $url;
     }
 }

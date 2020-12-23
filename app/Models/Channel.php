@@ -22,6 +22,7 @@ class Channel extends Model
         'title',
     ];
 
+    // Typically called by a cron job, but could be called manually or by another process if need be
     public function getSubscriberInfo()
     {
         $response = Http::get($this->url);
