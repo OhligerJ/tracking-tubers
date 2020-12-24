@@ -16,7 +16,8 @@ use App\Http\Controllers\ChannelController;
 Route::get('/all_channel_info/{url}', [ChannelController::class, 'allChannelInfo']);
 Route::get('/post_channel_url/{url}', [ChannelController::class, 'postNewChannel']);
 
-Route::get('/home', function () {
-    return 'hello';
-});
+Route::get('/home', [ChannelController::class, 'index']);
+// Route::get('/home', function () {
+//     return 'hello';
+// });
 

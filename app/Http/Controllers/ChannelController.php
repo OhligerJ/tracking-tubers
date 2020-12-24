@@ -9,6 +9,33 @@ use App\Jobs\AddChannel;
 
 class ChannelController extends Controller
 {
+    public function index(Request $request)
+    {
+        if(isset($request->url)){
+            $channel = Channel::where('url', $url)->first();
+        } else {
+            $channel = Channel::all()->first();
+        }
+
+         $channel_info = ChannelInfo::where('channel_id', $channel->id)->orderBy('date', 'asc')->get();
+
+         $info_array = [];
+
+        foreach($channel_info as $key => $val){
+            if ($key > 0){
+                $sub_diff = $channel_info[$key]['subscriber_count'] - $channel_info[$key - 1]['subscriber_count'];
+            } else {
+                $sub_diff = $val['subscriber_count'];
+            }
+
+            if($sub_diff > 0 && $key > 0){
+                $sub_diff = '+'.$sub_diff;
+            }
+            $info_array[] = [$val['date'], $sub_diff];           
+        }
+
+        return view('welcome', ['subscriber_info' => $info_array]);
+    }
     public function dispatchAddChannel(Request $request)
     {
         $url = $this->cleanUrl($request->url);
